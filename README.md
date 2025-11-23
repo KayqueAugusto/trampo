@@ -8,18 +8,21 @@ Este repositório segue o padrão **Monorepo**, contendo o **Frontend**, **Backe
 
 ## 📂 Estrutura do Projeto (Monorepo)
 
+```text
 Trampo/
-├── trampo-backend/ → API .NET 8 (TrampoAuthApi)
-├── trampo-database/ → Scripts SQL (DDL / Seeds)
-├── trampo-frontend/ → React + Vite + TS + Tailwind
-└── README.md → Documentação principal
+├── trampo-backend/      → API .NET 8 (TrampoAuthApi)
+├── trampo-database/     → Scripts SQL (DDL + Seeds)
+└── trampo-frontend/     → React + Vite + TypeScript + Tailwind
 
+```
+---
 ### 🔹 **Backend (`trampo-backend/`)**
 
 Implementado em **.NET 8 Web API**, com autenticação JWT e Entity Framework Core.
 
 Arquitetura atual:
 
+```text
 trampo-backend/
 ├── bin/
 ├── obj/
@@ -32,7 +35,7 @@ trampo-backend/
 ├── Program.cs
 ├── TrampoAuthApi.csproj
 └── TrampoAuthApi.sln
-
+```
 
 Funcionalidades já implementadas:
 
@@ -58,6 +61,7 @@ Aplicação desenvolvida em **React + Vite + TypeScript**, usando:
 
 Estrutura principal:
 
+```text
 trampo-frontend/
 ├── src/
 ├── public/
@@ -67,7 +71,7 @@ trampo-frontend/
 ├── tailwind.config.js
 ├── tsconfig.json
 └── .env (não versionado)
-
+```
 
 ---
 
@@ -81,6 +85,7 @@ Pasta dedicada ao banco de dados PostgreSQL:
 
 Estrutura esperada:
 
+```text
 trampo-database/
 ├── ddl/
 │ └── trampo_schema.sql
@@ -88,7 +93,7 @@ trampo-database/
 │ ├── categories.sql
 │ ├── skills.sql
 └── README.md
-
+```
 
 (*Será populado conforme o projeto avança.*)
 
@@ -180,7 +185,7 @@ Scripts SQL completos (DER oficial)
 
 📘 Documentação
 
-Todos os requisitos, RF/RNF, DER completo, diagramas de caso de uso e sequência, estão documentados no PDF base do projeto.
+Todos os requisitos, RF/RNF, DER completo, diagramas de caso de uso e sequência, estão documentados no Notion https://www.notion.so/Plataforma-Web-de-Conex-o-entre-Freelancers-e-Demandantes-Trampo-2612e1fcc3cf80e29bf6daaf0a4db12d
 
 👤 Autor
 
@@ -192,14 +197,3 @@ Desenvolvedor Full Stack • Criador do Projeto Trampo
 Projeto acadêmico — livre para estudos.
 
 ---
-
-# 🎯 **Agora sim está totalmente correto e alinhado ao SEU projeto real.**
-
-## Você quer que eu gere também?
-### ✔ README específico para **trampo-frontend**?  
-### ✔ README específico para **trampo-backend (TrampoAuthApi)**?  
-### ✔ README para **trampo-database**?  
-### ✔ README com badges (tecnologias, status, commits)?  
-### ✔ README com capa visual e logo?
-
-Só pedir!
