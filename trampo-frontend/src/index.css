@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+/* Rolagem suave */
+html { scroll-behavior: smooth; }
+
+/* Altura mínima global */
+html, body, #root { min-height: 100%; }
+
+:root {
+  /* Marca */
+  --brand-orange:#ff6a00;
+  --brand-orange-dark:#e85f00;
+  --brand-orange-darker:#cc5400;
+
+  --brand-blue:#3b5bff;
+  --brand-blue-dark:#324fe0;
+
+  /* Gradiente base */
+  --hero-orange:#ff7a00;   /* topo (laranja quente) */
+  --hero-purple:#5b54ff;   /* base/lateral (roxo)    */
+}
+
+/* ---------- Variável animável que controla o "neon" ---------- */
+@property --glow {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0.35;  /* opacidade inicial do roxo extra */
+}
+
+/* Pulso do neon: mais escuro -> mais claro -> mais escuro */
+@keyframes glowPulse {
+  0%   { --glow: 0.18; }
+  50%  { --glow: 0.65; }
+  100% { --glow: 0.18; }
+}
+
+/* ----------- Fundo principal (gradiente + camada roxa animada) ----------- */
+body {
+  /* Camada 1: "neon" roxo que pulsa (radial no canto inferior direito) */
+  /* Camada 2: gradiente laranja -> roxo (base) */
+  background-image:
+    radial-gradient(
+      90% 90% at 75% 75%,
+      rgba(91, 84, 255, var(--glow)) 0%,
+      rgba(91, 84, 255, calc(var(--glow) * 0.45)) 45%,
+      rgba(4, 4, 29, 0) 70%
+    ),
+    linear-gradient(
+      135deg,
+      var(--hero-orange) 0%,
+      #ff7a00 25%,
+      #ff8320 45%,
+      var(--hero-purple) 100%
+    );
+
+  background-repeat: no-repeat, no-repeat;
+  background-attachment: fixed, fixed;   /* mantém o fundo estático ao rolar */
+  background-size: cover, cover;
+  overflow-x: hidden;
+  position: relative;
+
+  /* ⚡ velocidade rápida para você perceber a transição */
+  animation: glowPulse 1.6s ease-in-out infinite;
+}
+
+/* Conteúdo sempre acima do fundo */
+#root, main, header, footer { position: relative; z-index: 1; }
