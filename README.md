@@ -142,7 +142,7 @@ Configure a connection string no backend:
   "DefaultConnection": "Host=...;Port=5432;Database=trampo;Username=...;Password=..."
 }
 ```
-
+---
 
 🧩 Requisitos Funcionais Atendidos (Resumo)
 
@@ -206,6 +206,8 @@ Toda documentação oficial está no Notion:
 
 Kayque Augusto Cassiano Milhome
 Desenvolvedor Full Stack • Criador do Projeto Trampo
+
+---
 
 📄 Licença
 
