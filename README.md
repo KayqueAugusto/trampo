@@ -199,6 +199,9 @@ Scripts DDL + Seeds
 
 Toda documentação oficial está no Notion:
 🔗 https://www.notion.so/Plataforma-Web-de-Conex-o-entre-Freelancers-e-Demandantes-Trampo-2612e1fcc3cf80e29bf6daaf0a4db12d
+
+--
+
 👤 Autor
 
 Kayque Augusto Cassiano Milhome
