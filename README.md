@@ -110,15 +110,18 @@ npm run dev
 
 Acessar:
 👉 http://localhost:5173
+```
 
 ## ▶️ **Backend**
 
+```bash
 cd trampo-backend
 dotnet restore
 dotnet run
 
 A API inicia em algo como:
 👉 http://localhost:5156
+```
 
 ## ▶️ **Banco de Dados**
 
@@ -128,13 +131,18 @@ Abra o Supabase / Railway / Postgres local
 
 Execute o arquivo:
 
+```bash
 trampo-database/ddl/trampo_schema.sql
+```
 
 Configure a connection string no backend:
 
+```json
 "ConnectionStrings": {
   "DefaultConnection": "Host=...;Port=5432;Database=trampo;Username=...;Password=..."
 }
+```
+
 
 🧩 Requisitos Funcionais Atendidos (Resumo)
 
@@ -150,10 +158,12 @@ Base para integração Front + Back
 
 Arquitetura limpa para expansão futura
 
-🚀 Tecnologias
-Frontend
+--
 
-React (TypeScript)
+🚀 Tecnologias
+💻 Frontend
+
+React (TS)
 
 Vite
 
@@ -165,7 +175,7 @@ Axios
 
 Zod
 
-Backend
+🛠️ Backend
 
 .NET 8 Web API
 
@@ -175,18 +185,20 @@ JWT Authentication
 
 CORS
 
-Clean Architecture (Services + DTO + Models)
+Clean Architecture
 
-Banco
+🗄️ Banco
 
 PostgreSQL
 
-Scripts SQL completos (DER oficial)
+Scripts DDL + Seeds
+
+---
 
 📘 Documentação
 
-Todos os requisitos, RF/RNF, DER completo, diagramas de caso de uso e sequência, estão documentados no Notion https://www.notion.so/Plataforma-Web-de-Conex-o-entre-Freelancers-e-Demandantes-Trampo-2612e1fcc3cf80e29bf6daaf0a4db12d
-
+Toda documentação oficial está no Notion:
+🔗 https://www.notion.so/Plataforma-Web-de-Conex-o-entre-Freelancers-e-Demandantes-Trampo-2612e1fcc3cf80e29bf6daaf0a4db12d
 👤 Autor
 
 Kayque Augusto Cassiano Milhome
@@ -196,4 +208,3 @@ Desenvolvedor Full Stack • Criador do Projeto Trampo
 
 Projeto acadêmico — livre para estudos.
 
----
