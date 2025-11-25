@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { useAuthStore } from "../store/authStore";
-import Navbar from "../components/Navbar";
-
+import LoggedNavbar from "../components/LoggedNavbar";
 
 type AdType = "freelancer" | "ofereco" | "procura-se";
 
@@ -54,7 +52,6 @@ const MOCK_ADS: AdCard[] = [
 ];
 
 export function AppDashboardPage() {
-  const user = useAuthStore((s) => s.user);
   const [search, setSearch] = useState("");
   const [selectedType, setSelectedType] = useState<AdType | "todos">("todos");
   const [onlyRemote, setOnlyRemote] = useState(false);
@@ -75,226 +72,302 @@ export function AppDashboardPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#140E32] via-[#1B1540] to-[#221956] text-white">
-      <Navbar variant="public" surface="light" />
+    <div className="min-h-screen bg-[#f5f7fb] text-slate-900">
+      {/* NAVBAR LOGADA IGUAL AO FIGMA */}
+      <LoggedNavbar active="inicio" />
 
       <main className="mx-auto mt-6 w-full max-w-6xl px-4 pb-10">
-        <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-sm text-white/60">Bem-vindo de volta,</p>
-            <h1 className="text-2xl font-semibold">
-              {user?.name || "usuário"} 👋
-            </h1>
-          </div>
-          <button className="rounded-xl bg-gradient-to-r from-orange-500 to-pink-500 px-5 py-2.5 text-sm font-semibold shadow-lg shadow-orange-500/30">
-            Publicar anúncio
-          </button>
-        </div>
-
-        <div className="mb-4 flex gap-4 border-b border-white/10 text-sm">
-          {["Início", "Anúncios", "Mensagens", "Perfil"].map((tab, idx) => (
-            <button
-              key={tab}
-              className={`pb-2 ${
-                idx === 0
-                  ? "border-b-2 border-orange-400 text-white"
-                  : "text-white/60 hover:text-white"
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-
-        <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2 ring-1 ring-white/10 focus-within:ring-2">
-              <span className="text-white/60">🔍</span>
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Buscar oportunidades, cargos, habilidades..."
-                className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/40"
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2 text-xs md:text-sm">
-            <span className="text-white/60">Tipo de publicação:</span>
-            <button
-              onClick={() => setSelectedType("todos")}
-              className={`rounded-full px-3 py-1 ${
-                selectedType === "todos"
-                  ? "bg-white text-[#140E32]"
-                  : "bg-white/10 text-white/80 hover:bg-white/15"
-              }`}
-            >
-              Todos
-            </button>
-            <button
-              onClick={() => setSelectedType("freelancer")}
-              className={`rounded-full px-3 py-1 ${
-                selectedType === "freelancer"
-                  ? "bg-emerald-400 text-[#140E32]"
-                  : "bg-white/10 text-white/80 hover:bg-white/15"
-              }`}
-            >
-              Freelancer
-            </button>
-            <button
-              onClick={() => setSelectedType("procura-se")}
-              className={`rounded-full px-3 py-1 ${
-                selectedType === "procura-se"
-                  ? "bg-sky-400 text-[#140E32]"
-                  : "bg-white/10 text-white/80 hover:bg-white/15"
-              }`}
-            >
-              Procura-se
-            </button>
-            <button
-              onClick={() => setSelectedType("ofereco")}
-              className={`rounded-full px-3 py-1 ${
-                selectedType === "ofereco"
-                  ? "bg-orange-400 text-[#140E32]"
-                  : "bg-white/10 text-white/80 hover:bg-white/15"
-              }`}
-            >
-              Ofereço
-            </button>
-          </div>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-[260px,1fr]">
-          <aside className="space-y-4 rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
-            <h2 className="text-sm font-semibold text-white/90">
-              Filtros avançados
-            </h2>
-
-            <div className="space-y-1 text-sm">
-              <label className="text-xs text-white/60">Categoria</label>
-              <select className="w-full rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none ring-1 ring-white/10">
-                <option className="bg-[#140E32]" value="">
-                  Todas
-                </option>
-                <option className="bg-[#140E32]" value="Design">
-                  Design
-                </option>
-                <option className="bg-[#140E32]" value="Vendas">
-                  Vendas
-                </option>
-                <option className="bg-[#140E32]" value="Fotografia">
-                  Fotografia
-                </option>
-              </select>
-            </div>
-
-            <div className="space-y-1 text-sm">
-              <label className="text-xs text-white/60">Cidade</label>
-              <input
-                placeholder="Ex: São Paulo"
-                className="w-full rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none ring-1 ring-white/10"
-              />
-            </div>
-
-            <div className="space-y-1 text-sm">
-              <label className="text-xs text-white/60">Estado (UF)</label>
-              <input
-                placeholder="Ex: SP"
-                maxLength={2}
-                className="w-full rounded-lg bg-white/10 px-3 py-2 text-sm uppercase text-white outline-none ring-1 ring-white/10"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div>
-                <label className="text-xs text-white/60">Preço mín.</label>
+        {/* CARD DE BUSCA + FILTROS RÁPIDOS (TOPO) */}
+        <section className="mb-6 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+          <div className="flex flex-wrap items-center gap-4">
+            {/* busca */}
+            <div className="flex-1 min-w-[230px]">
+              <div className="flex items-center gap-2 rounded-xl bg-[#f5f7fb] px-3 py-2 ring-1 ring-slate-200 focus-within:ring-2 focus-within:ring-[#4a3aff]">
+                <span className="text-slate-500">🔍</span>
                 <input
-                  placeholder="R$"
-                  className="mt-1 w-full rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none ring-1 ring-white/10"
-                />
-              </div>
-              <div>
-                <label className="text-xs text-white/60">Preço máx.</label>
-                <input
-                  placeholder="R$"
-                  className="mt-1 w-full rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none ring-1 ring-white/10"
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Pesquisar anúncios..."
+                  className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
                 />
               </div>
             </div>
 
-            <label className="flex items-center gap-2 text-xs text-white/80">
-              <input
-                type="checkbox"
-                checked={onlyRemote}
-                onChange={(e) => setOnlyRemote(e.target.checked)}
-                className="accent-white"
-              />
-              Apenas remoto
-            </label>
+            {/* botões de tipo no topo (Todos / Procura-se / Ofereço) */}
+            <div className="flex flex-wrap items-center gap-2 text-xs md:text-sm">
+              <button className="rounded-xl bg-[#4a3aff] px-4 py-2 text-xs font-medium text-white shadow-sm">
+                Buscar
+              </button>
 
-            <button className="mt-2 w-full rounded-xl bg-white/90 py-2 text-sm font-semibold text-[#140E32]">
-              Aplicar filtros
-            </button>
+              <button
+                onClick={() => setSelectedType("todos")}
+                className={`rounded-xl px-4 py-2 text-xs md:text-sm font-medium ${
+                  selectedType === "todos"
+                    ? "bg-slate-900 text-white"
+                    : "bg-transparent text-slate-600 hover:bg-slate-100"
+                }`}
+              >
+                Todos
+              </button>
+              <button
+                onClick={() => setSelectedType("procura-se")}
+                className={`rounded-xl px-4 py-2 text-xs md:text-sm font-medium ${
+                  selectedType === "procura-se"
+                    ? "bg-slate-900 text-white"
+                    : "bg-transparent text-slate-600 hover:bg-slate-100"
+                }`}
+              >
+                Procura-se
+              </button>
+              <button
+                onClick={() => setSelectedType("ofereco")}
+                className={`rounded-xl px-4 py-2 text-xs md:text-sm font-medium ${
+                  selectedType === "ofereco"
+                    ? "bg-slate-900 text-white"
+                    : "bg-transparent text-slate-600 hover:bg-slate-100"
+                }`}
+              >
+                Ofereço
+              </button>
+            </div>
+
+            {/* remoto / presencial */}
+            <div className="ml-auto flex flex-wrap items-center gap-2 text-xs md:text-sm">
+              <button
+                onClick={() => setOnlyRemote(!onlyRemote)}
+                className={`rounded-xl px-4 py-2 font-medium ${
+                  onlyRemote
+                    ? "bg-slate-900 text-white"
+                    : "bg-transparent text-slate-600 hover:bg-slate-100"
+                }`}
+              >
+                Remoto
+              </button>
+              <button className="rounded-xl bg-transparent px-4 py-2 text-slate-600 hover:bg-slate-100">
+                Presencial
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* LAYOUT EM 2 COLUNAS – SEM ARBITRARY CLASS */}
+        <div className="mt-2 grid gap-6 md:grid-cols-3 items-start">
+          {/* COLUNA ESQUERDA – SIDEBAR (1/3) */}
+          <aside className="space-y-4 md:col-span-1">
+            {/* Tipo de publicação */}
+            <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+              <h2 className="text-sm font-semibold text-slate-800">
+                Tipo de publicação
+              </h2>
+              <div className="flex flex-wrap gap-2 text-xs font-semibold">
+                <button
+                  onClick={() => setSelectedType("freelancer")}
+                  className={`inline-flex items-center justify-center rounded-full px-4 py-2 ${
+                    selectedType === "freelancer"
+                      ? "bg-[#ff7a00] text-white"
+                      : "bg-[#fff2e5] text-[#ff7a00]"
+                  }`}
+                >
+                  FREELANCER
+                </button>
+                <button
+                  onClick={() => setSelectedType("procura-se")}
+                  className={`inline-flex items-center justify-center rounded-full px-4 py-2 ${
+                    selectedType === "procura-se"
+                      ? "bg-[#4a3aff] text-white"
+                      : "bg-[#ecebff] text-[#4a3aff]"
+                  }`}
+                >
+                  PROCURA-SE
+                </button>
+                <button
+                  onClick={() => setSelectedType("ofereco")}
+                  className={`inline-flex items-center justify-center rounded-full px-4 py-2 ${
+                    selectedType === "ofereco"
+                      ? "bg-[#1f9c5a] text-white"
+                      : "bg-[#e3f5ec] text-[#1f9c5a]"
+                  }`}
+                >
+                  OFEREÇO
+                </button>
+              </div>
+            </div>
+
+            {/* Filtros */}
+            <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+              <h2 className="text-sm font-semibold text-slate-800">Filtros</h2>
+
+              <div className="space-y-1 text-sm">
+                <label className="text-xs text-slate-500">Categoria</label>
+                <select className="w-full rounded-lg border border-slate-200 bg-[#f5f7fb] px-3 py-2 text-xs text-slate-700 outline-none focus:ring-1 focus:ring-[#4a3aff]">
+                  <option value="">Todas</option>
+                  <option value="Design">Design</option>
+                  <option value="Vendas">Vendas</option>
+                  <option value="Fotografia">Fotografia</option>
+                </select>
+              </div>
+
+              <div className="space-y-1 text-sm">
+                <label className="text-xs text-slate-500">Cidade</label>
+                <input
+                  placeholder="Ex: São Paulo"
+                  className="w-full rounded-lg border border-slate-200 bg-[#f5f7fb] px-3 py-2 text-xs text-slate-700 outline-none focus:ring-1 focus:ring-[#4a3aff]"
+                />
+              </div>
+
+              <div className="space-y-1 text-sm">
+                <label className="text-xs text-slate-500">Estado (UF)</label>
+                <input
+                  placeholder="Ex: SP"
+                  maxLength={2}
+                  className="w-full rounded-lg border border-slate-200 bg-[#f5f7fb] px-3 py-2 text-xs uppercase text-slate-700 outline-none focus:ring-1 focus:ring-[#4a3aff]"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <label className="text-xs text-slate-500">Preço mín.</label>
+                  <input
+                    placeholder="R$"
+                    className="mt-1 w-full rounded-lg border border-slate-200 bg-[#f5f7fb] px-3 py-2 text-xs text-slate-700 outline-none focus:ring-1 focus:ring-[#4a3aff]"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-500">Preço máx.</label>
+                  <input
+                    placeholder="R$"
+                    className="mt-1 w-full rounded-lg border border-slate-200 bg-[#f5f7fb] px-3 py-2 text-xs text-slate-700 outline-none focus:ring-1 focus:ring-[#4a3aff]"
+                  />
+                </div>
+              </div>
+
+              <label className="flex items-center gap-2 text-xs text-slate-600">
+                <input
+                  type="checkbox"
+                  checked={onlyRemote}
+                  onChange={(e) => setOnlyRemote(e.target.checked)}
+                  className="rounded border-slate-300"
+                />
+                Apenas remoto
+              </label>
+
+              <button className="mt-1 w-full rounded-xl bg-slate-900 py-2 text-sm font-semibold text-white">
+                Aplicar filtros
+              </button>
+            </div>
+
+            {/* Por que usar o Trampo? */}
+            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+              <h2 className="mb-2 text-sm font-semibold text-slate-800">
+                Por que usar o Trampo?
+              </h2>
+              <ul className="list-inside list-disc space-y-1 text-xs text-slate-600">
+                <li>Publicações duplas (Procura-se / Ofereço)</li>
+                <li>Busca com filtros e ordenação</li>
+                <li>Chat integrado e avaliações</li>
+              </ul>
+            </div>
           </aside>
 
-          <section className="space-y-3">
-            <p className="text-xs text-white/60">
-              {filteredAds.length} resultados encontrados
-            </p>
+          {/* COLUNA DIREITA – HEADER + CARDS (2/3) */}
+          <section className="space-y-4 md:col-span-2">
+            {/* header de resultados + ordenação */}
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="text-sm text-slate-600">
+                {filteredAds.length}{" "}
+                {filteredAds.length === 1
+                  ? "oportunidade encontrada"
+                  : "oportunidades encontradas"}
+              </p>
 
-            <div className="grid gap-4">
-              {filteredAds.map((ad) => (
-                <article
-                  key={ad.id}
-                  className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 hover:bg-white/10 transition"
-                >
-                  <div className="mb-2 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2 text-xs">
-                      <span
-                        className={`rounded-full px-2 py-0.5 font-semibold ${
-                          ad.type === "freelancer"
-                            ? "bg-emerald-400 text-[#140E32]"
-                            : ad.type === "procura-se"
-                            ? "bg-sky-400 text-[#140E32]"
-                            : "bg-orange-400 text-[#140E32]"
-                        }`}
-                      >
-                        {ad.type === "freelancer"
-                          ? "Freelancer"
-                          : ad.type === "procura-se"
-                          ? "Procura-se"
-                          : "Ofereço"}
-                      </span>
-                      <span className="rounded-full bg-white/10 px-2 py-0.5 text-white/80">
-                        {ad.category}
+              <div className="flex items-center gap-2 text-sm text-slate-600">
+                <span>Ordenar por:</span>
+                <select className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-[#4a3aff]">
+                  <option>Mais recentes</option>
+                  <option>Maior valor</option>
+                  <option>Menor valor</option>
+                </select>
+              </div>
+            </div>
+
+            {/* grid dos cards – 3 colunas no desktop, igual Figma */}
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {filteredAds.map((ad) => {
+                const typeLabel =
+                  ad.type === "freelancer"
+                    ? "FREELANCER"
+                    : ad.type === "ofereco"
+                    ? "OFEREÇO"
+                    : "PROCURA-SE";
+
+                const typeClasses =
+                  ad.type === "freelancer"
+                    ? "bg-[#fff2e5] text-[#ff7a00]"
+                    : ad.type === "procura-se"
+                    ? "bg-[#ecebff] text-[#4a3aff]"
+                    : "bg-[#e3f5ec] text-[#1f9c5a]";
+
+                const buttonClasses =
+                  ad.type === "freelancer"
+                    ? "bg-[#ff7a00] hover:bg-[#e56d00]"
+                    : ad.type === "procura-se"
+                    ? "bg-[#4a3aff] hover:bg-[#392fdd]"
+                    : "bg-[#1f9c5a] hover:bg-[#178249]";
+
+                return (
+                  <article
+                    key={ad.id}
+                    className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+                  >
+                    {/* TOPO DO CARD – RESPONSIVO */}
+                    <div className="mb-3 flex flex-wrap items-start justify-between gap-x-2 gap-y-1 text-[11px]">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span
+                          className={`rounded-full px-3 py-1 font-semibold ${typeClasses}`}
+                        >
+                          {typeLabel}
+                        </span>
+                        <span className="rounded-full bg-[#f5f7fb] px-2 py-1 text-[11px] text-slate-600">
+                          {ad.category}
+                        </span>
+                      </div>
+                      <span className="text-slate-500 whitespace-nowrap">
+                        {ad.city} • {ad.uf}
                       </span>
                     </div>
-                    <span className="text-xs text-white/60">
-                      {ad.city} • {ad.uf}
-                    </span>
-                  </div>
 
-                  <h3 className="text-base font-semibold">{ad.title}</h3>
-                  <p className="mt-1 text-sm text-white/80">
-                    {ad.description}
-                  </p>
+                    {/* CONTEÚDO */}
+                    <div>
+                      <h3 className="text-sm font-semibold text-slate-900">
+                        {ad.title}
+                      </h3>
+                      <p className="mt-1 text-xs text-slate-600 leading-relaxed line-clamp-2">
+                        {ad.description}
+                      </p>
 
-                  <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs text-white/70">
-                    <span>{ad.priceRange}</span>
-                    <div className="flex items-center gap-2">
                       {ad.remote && (
-                        <span className="rounded-full bg-emerald-400/20 px-2 py-0.5 text-emerald-300">
-                          Remoto
-                        </span>
+                        <div className="mt-2">
+                          <span className="rounded-full bg-emerald-50 px-2 py-1 text-[11px] font-medium text-emerald-600">
+                            Remoto
+                          </span>
+                        </div>
                       )}
-                      <button className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[#140E32]">
-                        Ver detalhes
+                    </div>
+
+                    {/* RODAPÉ */}
+                    <div className="mt-4 flex items-center justify-between text-xs text-slate-700">
+                      <p className="font-semibold">{ad.priceRange}</p>
+
+                      <button
+                        className={`rounded-full px-4 py-2 text-[11px] font-semibold text-white ${buttonClasses} transition-colors`}
+                      >
+                        ENVIAR PROPOSTA
                       </button>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           </section>
         </div>

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TrampoAuthApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d5dab1513a25669e3bb874874caee0fe175fb952")]
 [assembly: System.Reflection.AssemblyProductAttribute("TrampoAuthApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TrampoAuthApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

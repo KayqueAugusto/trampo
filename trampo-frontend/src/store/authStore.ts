@@ -20,12 +20,16 @@ type State = {
   logout: () => void;
 };
 
+const initialState: Pick<State, "token" | "user" | "remember"> = {
+  token: null,
+  user: null,
+  remember: false,
+};
+
 export const useAuthStore = create<State>()(
   persist(
-    (set) => ({
-      token: null,
-      user: null,
-      remember: false,
+    (set, get) => ({
+      ...initialState,
 
       setToken: (t) => set({ token: t }),
       setUser: (u) => set({ user: u }),
@@ -34,7 +38,12 @@ export const useAuthStore = create<State>()(
       // usado depois do login/cadastro
       setAuth: (token, user) => set({ token, user }),
 
-      logout: () => set({ token: null, user: null, remember: false }),
+      // usado no botão SAIR
+      logout: () => {
+        // limpa estado em memória
+        set({ ...initialState });
+        // como estamos usando persist, o novo estado já sobrescreve no storage
+      },
     }),
     {
       name: "trampo-auth",
