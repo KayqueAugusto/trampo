@@ -15,6 +15,7 @@ const loginSchema = z.object({
   password: z.string().min(6, "Mínimo 6 caracteres"),
   remember: z.boolean(),
 });
+
 type LoginForm = z.infer<typeof loginSchema>;
 
 const registerSchema = z
@@ -23,8 +24,8 @@ const registerSchema = z
     password: z.string().min(6, "Mínimo 6 caracteres"),
     confirmPassword: z.string().min(6, "Mínimo 6 caracteres"),
     role: z.enum(["freelancer", "demandante"]),
-    acceptTerms: z.literal(true, {
-      errorMap: () => ({ message: "Aceite os termos para continuar" }),
+    acceptTerms: z.boolean().refine((value) => value === true, {
+      message: "Aceite os termos para continuar",
     }),
   })
   .refine((v) => v.password === v.confirmPassword, {
@@ -82,7 +83,7 @@ export function AuthModal({
       password: "",
       confirmPassword: "",
       role: "freelancer",
-      acceptTerms: true,
+      acceptTerms: false,
     },
   });
 
@@ -126,7 +127,9 @@ export function AuthModal({
       const res = await registerApi({
         email: data.email,
         password: data.password,
+        confirmPassword: data.confirmPassword,
         role: data.role,
+        acceptTerms: data.acceptTerms,
       });
 
       handleAuthSuccess(res, false);
@@ -278,11 +281,11 @@ export function AuthModal({
                 >
                   <path
                     fill="#FFC107"
-                    d="M43.611 20.083H42V20H24v8h11.303C33.673 31.876 29.223 35 24 35c-7.18 0-13-5.82-13-13s5.82-13 13-13c3.313 0 6.319 1.235 8.598 3.252l5.657-5.657C34.95 3.053 29.748 1 24 1 11.85 1 2 10.85 2 23s9.85 22 22 22c12.15 0 22-9.85 22-22 0-1.477-.153-2.918-.389-4.317z"
+                    d="M43.611 20.083H42V20H24v8h11.303C33.673 31.876 29.223 35 24 35c-7.18 0-13-5.82-13-13s5.82-13 13-13c3.313 0 6.319 1.235 8.598 3.252l5.657-5.657C34.95 3.053 29.748 1 24 1 11.85 1 2 10.85 2 23s9.85 22 22 22c12.15 0 22-9.85 22-22c0-1.477-.153-2.918-.389-4.317z"
                   />
                   <path
                     fill="#FF3D00"
-                    d="M6.306 14.691l6.571 4.819C14.48 16.2 18.87 13 24 13c3.313 0 6.319 1.235 8.598 3.252l5.657-5.657C34.95 3.053 29.748 1 24 1 15.317 1 7.853 5.777 4.116 12.691z"
+                    d="M6.306 14.691l6.571 4.819C14.48 16.2 18.87 13 24 13c3.313 0 6.319 1.235 8.598 3.252l5.657-5.657C34.95 3.053 29.748 1 24 1C15.317 1 7.853 5.777 4.116 12.691z"
                   />
                   <path
                     fill="#4CAF50"
@@ -469,11 +472,11 @@ export function AuthModal({
                 >
                   <path
                     fill="#FFC107"
-                    d="M43.611 20.083H42V20H24v8h11.303C33.673 31.876 29.223 35 24 35c-7.18 0-13-5.82-13-13s5.82-13 13-13c3.313 0 6.319 1.235 8.598 3.252l5.657-5.657C34.95 3.053 29.748 1 24 1 11.85 1 2 10.85 2 23s9.85 22 22 22c12.15 0 22-9.85 22-22 0-1.477-.153-2.918-.389-4.317z"
+                    d="M43.611 20.083H42V20H24v8h11.303C33.673 31.876 29.223 35 24 35c-7.18 0-13-5.82-13-13s5.82-13 13-13c3.313 0 6.319 1.235 8.598 3.252l5.657-5.657C34.95 3.053 29.748 1 24 1 11.85 1 2 10.85 2 23s9.85 22 22 22c12.15 0 22-9.85 22-22c0-1.477-.153-2.918-.389-4.317z"
                   />
                   <path
                     fill="#FF3D00"
-                    d="M6.306 14.691l6.571 4.819C14.48 16.2 18.87 13 24 13c3.313 0 6.319 1.235 8.598 3.252l5.657-5.657C34.95 3.053 29.748 1 24 1 15.317 1 7.853 5.777 4.116 12.691z"
+                    d="M6.306 14.691l6.571 4.819C14.48 16.2 18.87 13 24 13c3.313 0 6.319 1.235 8.598 3.252l5.657-5.657C34.95 3.053 29.748 1 24 1C15.317 1 7.853 5.777 4.116 12.691z"
                   />
                   <path
                     fill="#4CAF50"
