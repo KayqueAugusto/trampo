@@ -6,31 +6,32 @@ import { useNavigate } from "react-router-dom";
 import {
   login as loginApi,
   register as registerApi,
-  type AuthResponse, // ✅ novo: tipo da resposta normalizada
+  type AuthResponse,
 } from "../services/authService";
 import { useAuthStore } from "../store/authStore";
 
 const loginSchema = z.object({
   email: z.string().email("E-mail inválido"),
   password: z.string().min(6, "Mínimo 6 caracteres"),
-  remember: z.boolean().optional().default(false),
+  remember: z.boolean(),
 });
 type LoginForm = z.infer<typeof loginSchema>;
 
 const registerSchema = z
   .object({
-    email: z.string().email(),
-    password: z.string().min(6),
-    confirmPassword: z.string().min(6),
+    email: z.string().email("E-mail inválido"),
+    password: z.string().min(6, "Mínimo 6 caracteres"),
+    confirmPassword: z.string().min(6, "Mínimo 6 caracteres"),
     role: z.enum(["freelancer", "demandante"]),
-    acceptTerms: z
-      .boolean()
-      .refine((v) => v === true, { message: "Aceite os termos para continuar" }),
+    acceptTerms: z.literal(true, {
+      errorMap: () => ({ message: "Aceite os termos para continuar" }),
+    }),
   })
   .refine((v) => v.password === v.confirmPassword, {
     path: ["confirmPassword"],
     message: "Senhas não coincidem",
   });
+
 type RegisterForm = z.infer<typeof registerSchema>;
 
 export function AuthModal({
@@ -44,47 +45,56 @@ export function AuthModal({
 }) {
   const [tab, setTab] = useState<"login" | "register">(initialTab);
 
-  // estados para ver/ocultar as senhas
   const [showPassword, setShowPassword] = useState(false);
   const [showRegPassword, setShowRegPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // router
   const navigate = useNavigate();
 
-  // sempre que abrir, garante a aba pedida
   useEffect(() => {
     if (open) setTab(initialTab);
   }, [open, initialTab]);
 
-  // store de auth
   const setAuth = useAuthStore((s) => s.setAuth);
   const setRemember = useAuthStore((s) => s.setRemember);
 
-  // LOGIN
   const {
     register: rz,
     handleSubmit,
     formState: { errors: eLogin, isSubmitting: loadingLogin },
-  } = useForm<LoginForm>({ resolver: zodResolver(loginSchema) });
+  } = useForm<LoginForm>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      remember: false,
+    },
+  });
 
-  // REGISTER
   const {
     register: rf,
     handleSubmit: handleRegister,
     formState: { errors: eReg, isSubmitting: loadingReg },
   } = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { role: "freelancer" },
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+      role: "freelancer",
+      acceptTerms: true,
+    },
   });
 
   useEffect(() => {
-    const esc = (ev: KeyboardEvent) => ev.key === "Escape" && onClose();
+    const esc = (ev: KeyboardEvent) => {
+      if (ev.key === "Escape") onClose();
+    };
+
     document.addEventListener("keydown", esc);
     return () => document.removeEventListener("keydown", esc);
   }, [onClose]);
 
-  // ✅ Centraliza o pós-sucesso de login/cadastro
   function handleAuthSuccess(auth: AuthResponse, remember?: boolean) {
     setAuth(auth.token, auth.user);
 
@@ -101,11 +111,9 @@ export function AuthModal({
       const res = await loginApi({
         email: data.email,
         password: data.password,
-        remember: data.remember,
+        remember: !!data.remember,
       });
 
-      // antes tinha setRemember + setAuth + onClose + navigate
-      // agora tudo fica centralizado aqui:
       handleAuthSuccess(res, !!data.remember);
     } catch (err) {
       console.error(err);
@@ -115,9 +123,12 @@ export function AuthModal({
 
   async function onSubmitRegister(data: RegisterForm) {
     try {
-      const res = await registerApi(data); // DTO já bate com o RegisterDTO
+      const res = await registerApi({
+        email: data.email,
+        password: data.password,
+        role: data.role,
+      });
 
-      // cadastro não usa "lembrar-me" -> começa sem persistir
       handleAuthSuccess(res, false);
     } catch (err) {
       console.error(err);
@@ -138,13 +149,12 @@ export function AuthModal({
         }}
       >
         <div className="rounded-2xl bg-[rgba(20,18,51,0.8)] p-6 backdrop-blur-md">
-          {/* Tabs / Header */}
           <div className="mb-5 flex items-center justify-between">
             <div className="flex gap-6">
               <button
                 onClick={() => setTab("login")}
                 className={`pb-1 text-lg font-semibold ${
-                  tab === "login" ? "text-white border-b-2" : "text-white/70"
+                  tab === "login" ? "border-b-2 text-white" : "text-white/70"
                 }`}
               >
                 Entrar
@@ -152,7 +162,7 @@ export function AuthModal({
               <button
                 onClick={() => setTab("register")}
                 className={`pb-1 text-lg font-semibold ${
-                  tab === "register" ? "text-white border-b-2" : "text-white/70"
+                  tab === "register" ? "border-b-2 text-white" : "text-white/70"
                 }`}
               >
                 Cadastrar
@@ -163,7 +173,6 @@ export function AuthModal({
             </button>
           </div>
 
-          {/* Content */}
           {tab === "login" ? (
             <form onSubmit={handleSubmit(onSubmitLogin)} className="space-y-4">
               <div>
@@ -180,7 +189,6 @@ export function AuthModal({
                 )}
               </div>
 
-              {/* Campo de senha (login) com ícone circular de toggle */}
               <div className="relative">
                 <label className="text-sm text-white/80">Senha</label>
                 <input
@@ -193,7 +201,7 @@ export function AuthModal({
                   type="button"
                   aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3 bottom-3 h-5 w-5 rounded-full grid place-items-center text-white/80 hover:text-white"
+                  className="absolute bottom-3 right-3 grid h-5 w-5 place-items-center rounded-full text-white/80 hover:text-white"
                   tabIndex={0}
                 >
                   {showPassword ? (
@@ -252,14 +260,13 @@ export function AuthModal({
 
               <div className="flex items-center gap-3">
                 <div className="h-px flex-1 bg-white/15" />
-                <span className="text-white/60 text-sm">ou</span>
+                <span className="text-sm text-white/60">ou</span>
                 <div className="h-px flex-1 bg-white/15" />
               </div>
 
-              {/* Google button (com logo) */}
               <button
                 type="button"
-                className="w-full rounded-xl bg-white py-3 font-semibold text-neutral-900 flex items-center justify-center gap-3"
+                className="flex w-full items-center justify-center gap-3 rounded-xl bg-white py-3 font-semibold text-neutral-900"
                 onClick={() =>
                   alert("Google OAuth — conectar no backend /auth/google")
                 }
@@ -309,7 +316,6 @@ export function AuthModal({
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                {/* Campo senha do cadastro */}
                 <div className="relative">
                   <label className="text-sm text-white/80">Senha</label>
                   <input
@@ -323,7 +329,7 @@ export function AuthModal({
                       showRegPassword ? "Ocultar senha" : "Mostrar senha"
                     }
                     onClick={() => setShowRegPassword((v) => !v)}
-                    className="absolute right-3 bottom-3 h-5 w-5 rounded-full grid place-items-center text-white/80 hover:text-white"
+                    className="absolute bottom-3 right-3 grid h-5 w-5 place-items-center rounded-full text-white/80 hover:text-white"
                     tabIndex={0}
                   >
                     {showRegPassword ? (
@@ -351,7 +357,6 @@ export function AuthModal({
                   </button>
                 </div>
 
-                {/* Campo confirmar senha do cadastro */}
                 <div className="relative">
                   <label className="text-sm text-white/80">
                     Confirmar senha
@@ -367,7 +372,7 @@ export function AuthModal({
                       showConfirmPassword ? "Ocultar senha" : "Mostrar senha"
                     }
                     onClick={() => setShowConfirmPassword((v) => !v)}
-                    className="absolute right-3 bottom-3 h-5 w-5 rounded-full grid place-items-center text-white/80 hover:text-white"
+                    className="absolute bottom-3 right-3 grid h-5 w-5 place-items-center rounded-full text-white/80 hover:text-white"
                     tabIndex={0}
                   >
                     {showConfirmPassword ? (
@@ -409,7 +414,7 @@ export function AuthModal({
                     value="freelancer"
                     {...rf("role")}
                     className="accent-white"
-                  />{" "}
+                  />
                   Freelancer
                 </label>
                 <label className="flex flex-1 items-center gap-2 rounded-xl bg-white/10 px-3 py-2 text-white/90 ring-1 ring-white/10">
@@ -418,7 +423,7 @@ export function AuthModal({
                     value="demandante"
                     {...rf("role")}
                     className="accent-white"
-                  />{" "}
+                  />
                   Demandante
                 </label>
               </div>
@@ -428,7 +433,7 @@ export function AuthModal({
                   type="checkbox"
                   {...rf("acceptTerms")}
                   className="accent-white"
-                />{" "}
+                />
                 Eu aceito os Termos de uso
               </label>
               {eReg.acceptTerms && (
@@ -446,14 +451,13 @@ export function AuthModal({
 
               <div className="flex items-center gap-3">
                 <div className="h-px flex-1 bg-white/15" />
-                <span className="text-white/60 text-sm">ou</span>
+                <span className="text-sm text-white/60">ou</span>
                 <div className="h-px flex-1 bg-white/15" />
               </div>
 
-              {/* Google button (com logo) */}
               <button
                 type="button"
-                className="w-full rounded-xl bg-white py-3 font-semibold text-neutral-900 flex items-center justify-center gap-3"
+                className="flex w-full items-center justify-center gap-3 rounded-xl bg-white py-3 font-semibold text-neutral-900"
                 onClick={() =>
                   alert("Google OAuth — conectar no backend /auth/google")
                 }

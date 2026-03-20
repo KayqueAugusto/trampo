@@ -70,3 +70,4 @@ C:\Users\kayqu\Projetos\Trampo\trampo-backend\obj\Debug\net8.0\refint\TrampoAuth
 C:\Users\kayqu\Projetos\Trampo\trampo-backend\obj\Debug\net8.0\TrampoAuthApi.pdb
 C:\Users\kayqu\Projetos\Trampo\trampo-backend\obj\Debug\net8.0\TrampoAuthApi.genruntimeconfig.cache
 C:\Users\kayqu\Projetos\Trampo\trampo-backend\obj\Debug\net8.0\ref\TrampoAuthApi.dll
+C:\Users\kayqu\Projetos\Trampo\trampo-backend\obj\Debug\net8.0\TrampoAuthApi.sourcelink.json
